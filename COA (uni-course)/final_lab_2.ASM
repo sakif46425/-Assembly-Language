@@ -1,0 +1,25 @@
+.MODEL SMALL
+.STACK 100H
+.DATA
+.CODE
+MAIN PROC
+    MOV AX, @DATA
+    MOV DS, AX
+
+    MOV AX, 1234H
+    MOV BX, ABCDH
+    MOV CX, 2478H
+    MOV DX, 0H
+
+    PUSH CX
+    PUSH BX
+    POP DX
+    PUSH AX
+    POP BX
+    POP AX
+
+    Exit:
+    MOV AH, 4CH
+    INT 21H
+MAIN ENDP
+END MAIN

@@ -1,0 +1,141 @@
+;Task-1
+
+
+.model small
+.stack 100h
+.data
+.code 
+main proc
+    mov ax,@data
+    mov ds,ax
+
+    mov cx, 256
+    mov al, 0
+
+    print_Loop:
+        mov dl, al
+        mov ah, 02h
+        int 21h
+
+        inc al
+        loop print_Loop
+
+        mov ah, 4ch 
+        int 21h
+main endp
+end main
+
+
+
+
+;Task-2
+
+.model small
+.stack 100h
+.data
+.code
+main proc
+    mov ax, @data
+    mov ds, ax
+
+
+    mov cx, 20
+    mov ax, 0
+    mov bx, 100
+
+    sum_Loop:
+        add ax, bx
+        sub bx, 5
+        loop sum_Loop
+
+        mov ah, 4ch
+        int 21h
+main endp
+end main
+
+
+;Task-3
+
+.model small
+.stack 100h
+.data
+msg db 'Enter a character: $'
+newline db 0Dh,0Ah,'$'
+.code
+main proc
+    mov ax, @data
+    mov ds, ax
+
+    
+    mov ah, 09h
+    lea dx, msg
+    int 21h
+    
+    
+    mov ah, 01h
+    int 21h
+    mov bl, al         
+    
+   
+    mov ah, 09h
+    lea dx, newline
+    int 21h
+    
+   
+    mov cx, 50
+print_loop:
+    mov dl, bl
+    mov ah, 02h
+    int 21h
+    loop print_loop
+    
+
+    mov ah, 4ch
+    int 21h
+main endp
+end main
+
+
+;Task-4
+
+.model small
+.stack 100h
+.data
+newline db 0Dh,0Ah,'$'
+.code
+main proc
+    mov ax, @data
+    mov ds, ax
+
+    mov al, 80h        
+    
+outer_loop:
+    push cx
+    mov cx, 10        
+    
+inner_loop:
+    mov dl, al
+    mov ah, 02h
+    int 21h
+    
+    mov dl, ' '       
+    mov ah, 02h
+    int 21h
+    
+    inc al
+    loop inner_loop
+    
+    
+    mov ah, 09h
+    lea dx, newline
+    int 21h
+    
+    pop cx
+    sub cx, 10
+    jnz outer_loop
+    
+    
+    mov ah, 4ch
+    int 21h
+main endp
+end main
