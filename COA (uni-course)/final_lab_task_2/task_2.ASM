@@ -1,0 +1,60 @@
+.MODEL SMALL
+.STACK 100H
+.DATA
+MSG1 DB " $"
+MSG2 DB 13,10," $"
+BUF DB 10 DUP('$')   
+
+.CODE
+
+input PROC
+    MOV AH,1
+    INT 21H
+    RET
+input ENDP
+
+output PROC
+    MOV AH,2
+    INT 21H
+    RET
+output ENDP
+
+
+MAIN PROC
+    MOV AX,@DATA
+    MOV DS,AX
+
+    MOV AH,9
+    LEA DX,MSG1
+    INT 21H
+
+    
+    MOV SI,0
+READ_LOOP:
+    CALL input
+    CMP AL,13        
+    JE DONE_READING
+    MOV BUF[SI],AL   
+    INC SI
+    PUSH AX         
+    JMP READ_LOOP
+
+DONE_READING:
+    MOV AH,9
+    LEA DX,MSG2
+    INT 21H
+
+PRINT_LOOP:
+    CMP SI,0
+    JE DONE_PRINT
+    POP AX
+    MOV DL,AL
+    CALL output
+    DEC SI
+    JMP PRINT_LOOP
+
+DONE_PRINT:
+    MOV AH,4CH
+    INT 21H
+MAIN ENDP
+END MAIN
