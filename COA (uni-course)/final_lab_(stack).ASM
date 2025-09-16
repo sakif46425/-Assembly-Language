@@ -1,3 +1,4 @@
+
 .MODEL SMALL
 .STACK 100h
 
@@ -7,49 +8,49 @@
 
 MAIN PROC
 
-    MOV AX, @DATA
+         MOV  AX, @DATA
 
-    MOV DS, AX 
+         MOV  DS, AX
 
-    MOV AX,12Ah
+         MOV  AX,12Ah
 
-    MOV BX,22AAh
+         MOV  BX,22AAh
 
-    MOV CX, 12
+         MOV  CX, 12
 
-    ADD AX,BX
+         ADD  AX,BX
 
-    PUSH AX
+         PUSH AX
 
-    SUB AX,89
+         SUB  AX,89
 
-    SHL AX,1    
+         SHL  AX,1
 
-    PUSH AX
+         PUSH AX
 
-    PUSH BX
+         PUSH BX
 
-    SHR BX,2
+         SHR  BX,2
 
-    PUSH BX
+         PUSH BX
 
-    ROR AX,3
+         ROR  AX,3
 
-    SHL BX,1
+         SHL  BX,1
 
-    PUSH BX
+         PUSH BX
 
-    PUSH AX
+         PUSH AX
 
-    POP CX
+         POP  CX
 
-    POP DX
+         POP  DX
 
-    POP AX
+         POP  AX
 
-    MOV AH, 4CH 
+         MOV  AH, 4CH
 
-    INT 21H
+         INT  21H
 
 MAIN ENDP
  

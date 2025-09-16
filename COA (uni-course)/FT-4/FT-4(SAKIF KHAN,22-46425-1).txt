@@ -1,0 +1,204 @@
+;TASK-1
+
+
+.model small
+.stack 100h
+.data
+    msg1     db "Input: $"
+    msg2     db 13,10,"Output: $"
+    odd_msg  db 13,10,"Odd parity$"
+    even_msg db 13,10,"Even parity$"
+
+.code
+main proc
+                mov  ax, @data
+                mov  ds, ax
+    
+                mov  ah, 9
+                lea  dx, msg1
+                int  21h
+    
+                xor  bx, bx
+                mov  cx, 16
+    
+    input_loop: 
+                mov  ah, 1
+                int  21h
+    
+                cmp  al, 13
+                je   output
+    
+                cmp  al, '0'
+                je   zero_bit
+                cmp  al, '1'
+                je   one_bit
+                jmp  input_loop
+    
+    zero_bit:   
+                shr  bx, 1
+                loop input_loop
+    
+    one_bit:    
+                shr  bx, 1
+                or   bl, 1
+                loop input_loop
+    
+    output:     
+                mov  ah, 9
+                lea  dx, msg2
+                int  21h
+    
+  
+                mov  al, bl
+                and  al, 1
+    
+                cmp  al, 0
+                je   even_parity
+    
+                mov  ah, 9
+                lea  dx, odd_msg
+                int  21h
+                jmp  done
+    
+    even_parity:
+                mov  ah, 9
+                lea  dx, even_msg
+                int  21h
+    
+    done:       
+                mov  ah, 4Ch
+                int  21h
+    
+main endp
+end main
+
+
+											 
+
+,TASK-2
+
+
+.MODEL SMALL
+.STACK 100h
+.DATA
+    msg1    DB '$'
+    msg2    DB '$'
+    errMsg  DB 'Invalid input! Enter 0-9 only.$'
+    newline DB 13,10,'$'
+
+    num1    DB ?
+    num2    DB ?
+    result  DW ?
+
+.CODE
+MAIN PROC
+                  MOV  AX, @DATA
+                  MOV  DS, AX
+
+    ; --- Input first number ---
+    input1:       
+                  LEA  DX, msg1
+                  MOV  AH, 09h
+                  INT  21h
+
+                  MOV  AH, 01h
+                  INT  21h
+                  SUB  AL, '0'
+                  CMP  AL, 0
+                  JB   invalid_input
+                  CMP  AL, 9
+                  JA   invalid_input
+                  MOV  num1, AL
+
+    input2:       
+                  LEA  DX, msg2
+                  MOV  AH, 09h
+                  INT  21h
+
+                  MOV  AH, 01h
+                  INT  21h
+                  SUB  AL, '0'
+                  CMP  AL, 0
+                  JB   invalid_input
+                  CMP  AL, 9
+                  JA   invalid_input
+                  MOV  num2, AL
+
+ 
+                  MOV  AL, num1
+                  CMP  AL, 5
+                  JA   do_sum
+                  MOV  AL, num2
+                  CMP  AL, 5
+                  JA   do_sum
+
+    
+                  MOV  AL, num1
+                  MOV  BL, num2
+                  MUL  BL
+                  MOV  result, AX
+                  JMP  print_result
+
+    do_sum:       
+                  MOV  AL, num1
+                  ADD  AL, num2
+                  MOV  AH, 0
+                  MOV  result, AX
+
+                  JMP  print_result
+
+    invalid_input:
+                  LEA  DX, errMsg
+                  MOV  AH, 09h
+                  INT  21h
+                  JMP  input1
+
+    print_result: 
+   
+                  LEA  DX, newline
+                  MOV  AH, 09h
+                  INT  21h
+
+    
+                  MOV  AX, result
+                  CALL PrintNum
+
+  
+                  MOV  AH, 4Ch
+                  INT  21h
+
+MAIN ENDP
+
+   
+PrintNum PROC
+                  PUSH AX
+                  PUSH BX
+                  PUSH CX
+                  PUSH DX
+
+                  MOV  CX, 0
+                  MOV  BX, 10
+
+    convert_loop: 
+                  XOR  DX, DX
+                  DIV  BX
+                  PUSH DX
+                  INC  CX
+                  CMP  AX, 0
+                  JNE  convert_loop
+
+    print_loop:   
+                  POP  DX
+                  ADD  DL, '0'
+                  MOV  AH, 02h
+                  INT  21h
+                  LOOP print_loop
+
+                  POP  DX
+                  POP  CX
+                  POP  BX
+                  POP  AX
+                  RET
+PrintNum ENDP
+
+END MAIN
